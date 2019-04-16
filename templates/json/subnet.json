@@ -5,7 +5,7 @@
          "Type" : "AWS::EC2::Subnet",
          "Properties" : {
             "VpcId" : { "Ref" : "myVPC" },
-            "CidrBlock" :  { "Fn::Select" : [ 0, { "Fn::Cidr" : [ "10.0.0.0/20", 14, 8 ]}]},
+            "CidrBlock" :  { "Fn::Select" : [ 0, { "Fn::Cidr" : [ "10.0.0.0/20", 16, 8 ]}]},
             "AvailabilityZone" : "us-east-1a",
             "Tags" : [ { "Key" : "Name", "Value" : "subnet" } ]
          }

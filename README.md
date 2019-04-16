@@ -30,6 +30,7 @@ Assumptions:
 - for latest ami we are using AWS::SSM::Parameter::Value
 
 Further improvements:
+- should utilize "Fn::Cidr"  together with "Fn::Select" to get the array of available subnets cidr blocks
 - utilize the aws cli to validate the template outputs
 - validate the inputs
 - ssh script
