@@ -1,0 +1,27 @@
+{
+   "AWSTemplateFormatVersion" : "2010-09-09",
+   "Resources" : {
+      "MyEC2Instance" : {
+         "Type" : "AWS::EC2::Instance",
+         "Properties" : {
+            "ImageId" : { "Ref" : "LatestAmiId" },
+            "InstanceType" : "t2.micro",
+            "SubnetId" : { "Ref" : "Subnet1" },
+            "SecurityGroupIds" : [{ "Ref" : "InstanceSecurityGroup" }]
+         }
+      },
+      "InstanceSecurityGroup" : {
+       "Type" : "AWS::EC2::SecurityGroup",
+       "Properties" : {
+          "GroupDescription" : "Allow ssh to specific ip addr",
+          "VpcId" : {"Ref" : "myVPC"},
+          "SecurityGroupIngress" : [{
+                "IpProtocol" : "tcp",
+                "FromPort" : 22,
+                "ToPort" : 22,
+                "CidrIp" : "35.158.238.101/32"
+             }]
+       }
+     }
+   }
+}
