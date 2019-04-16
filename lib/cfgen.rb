@@ -64,7 +64,7 @@ module Cfgen
 
     #this method prepares the subnets from template
     def prepare_subnet(subnet, vpc_name, subnet_ip, az_list)
-      subnet_cidrlist = ["10.0.16.0/16","10.0.32.0/16", "10.0.48.0/16" ] #TODO WRONG! this should be replaced by "Fn::Cidr"
+      subnet_cidrlist = ["10.0.16.0/20","10.0.32.0/20", "10.0.48.0/20" ] #TODO WRONG! this should be replaced by "Fn::Cidr"
       subnet_new = deep_copy(subnet)
       subnet_old = deep_copy(subnet['Resources']['mySubnet'])
       az_count = 0;
