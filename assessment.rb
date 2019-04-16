@@ -18,8 +18,8 @@ file = __FILE__
 ARGV.options do |opts|
   opts.on("-vpcname", "--vpcname=val", String)   { |val| config["vpc_name"] = val }
   opts.on("-region", "--region=val", String)   { |val| config["vpc_region"] = val }
-  opts.on("-cidrvpc", "--cidrvpc=val", String)   { |val| config["cidr_vpc"] = val }
-  opts.on("-cidrsubnet", "--cidrsubnet=val", String)   { |val| config["cidr_subnet"] = val }
+  opts.on("-vpcip", "--vpcip=val", String)   { |val| config["vpc_ip"] = val }
+  opts.on("-subnet_ip", "--cidrsubnet=val", String)   { |val| config["subnet_ip"] = val }
   opts.on("-sship", "--sship=val", String)   { |val| config["ssh_ip"] = val }
   opts.on("-ec2type", "--ec2type=val", String)   { |val| config["instance_type"] = val }
   opts.on("--azlist=[x,y,z]", Array)     { |val| config["az_list"] = val }

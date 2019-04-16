@@ -33,8 +33,8 @@ module Cfgen
 
     # This method orchestrates each single template creation and stores as output
     def prepare_all
-      @vpc_output = prepare_vpc(@vpc, @config["vpc_name"], @config["cidr_vpc"])
-      @subnet_output = prepare_subnet(@subnet, @config["vpc_name"], @config["cidr_subnet"], @config["az_list"])
+      @vpc_output = prepare_vpc(@vpc, @config["vpc_name"], @config["vpc_ip"])
+      @subnet_output = prepare_subnet(@subnet, @config["vpc_name"], @config["subnet_ip"], @config["az_list"])
       @s3bucket_output = prepare_s3(@bucket)
       @ec2_output = prepare_ec2(@ec2, "Subnet1", @config["vpc_name"], "LatestAmiId", @config["ssh_ip"], @config["instance_type"])
     end
@@ -51,19 +51,19 @@ module Cfgen
     end
 
     #this method prepares the vpc from template
-    def prepare_vpc(vpc, vpc_name, cidr_vpc)
+    def prepare_vpc(vpc, vpc_name, vpc_ip)
       vpc_new = deep_copy(vpc)
       vpc_old = deep_copy(vpc['Resources']['myVPC'])
 
       #assign the values accordingly
       vpc_new['Resources'][vpc_name] = vpc_old
-      vpc_new['Resources'][vpc_name]["Properties"]["CidrBlock"] = cidr_vpc
+      vpc_new['Resources'][vpc_name]["Properties"]["CidrBlock"] = vpc_ip
       vpc_new['Resources'].delete("myVPC")
-      return vpc_new
+      vpc_new
     end
 
     #this method prepares the subnets from template
-    def prepare_subnet(subnet, vpc_name, cidr_subnet, az_list)
+    def prepare_subnet(subnet, vpc_name, subnet_ip, az_list)
       subnet_new = deep_copy(subnet)
       subnet_old = deep_copy(subnet['Resources']['mySubnet'])
       az_count = 0;
@@ -88,13 +88,12 @@ module Cfgen
     def prepare_s3(bucket)
       bucket_new = deep_copy(bucket)
       bucket_old = deep_copy(bucket['Resources']['EncryptedS3Bucket'])
-      bucket_name = "bucket#{rand(1...99999)}-${AWS::StackName}-${AWS::AccountId}"
+      bucket_name = "bucket#{rand(1...999)}-${AWS::StackName}-${AWS::AccountId}"
 
       #assign the values accordingly
       bucket_new['Resources']["EncryptedS3Bucket"]["Properties"]["BucketName"]["Fn::Sub"] = bucket_name
       bucket_new['Resources'].delete("myVPC")
-
-      return bucket_new
+      bucket_new
     end
 
     #this method prepares the ec2 and sg from template
@@ -108,9 +107,8 @@ module Cfgen
       ec2_new['Resources']["MyEC2Instance"]["Properties"]["SubnetId"]["Ref"] = subnet
       ec2_new['Resources']["InstanceSecurityGroup"]["Properties"]["VpcId"]["Ref"] = vpc
       ec2_new['Resources']["InstanceSecurityGroup"]["Properties"]["SecurityGroupIngress"][0]["CidrIp"] = ssh_ip
-      #ec2_new['Resources'].delete("myVPC")
 
-      return ec2_new
+      ec2_new
     end
 
     #deep cloning helper method
