@@ -8,7 +8,7 @@ Goal of the project is to create the deployment script using Ruby to generate a 
 
 Generated json template should:
 
-- be a valid cloudformation template
+- generate a valid cloudformation template
 - A VPC with three subnets. The VPC should have an IP-range of /16, the subnets /20
 - A security group for the VPC.
 - An S3 bucket with a randomly generated name and an ACL that denies access to anyone except for the owner.
@@ -26,19 +26,16 @@ The goal was to create reusable module which can be extended & use the configura
 Assumptions:
 - script will be used for different purposes for different scenarios, therefore we utilize configuration file
 - assuming that login into ec2 instance is not required, therefore no keys are mentioned in generated ec2 part of template
-- no custom ACL is generated for s3 bucket since default ACL which is created on creation of any new s3 bucket already fits the requirements 
+- no custom ACL is generated for s3 bucket since default ACL which is created on creation of any new s3 bucket already fits the requirements
+- for latest ami we are using AWS::SSM::Parameter::Value
 
 Further improvements:
 - utilize the aws cli to validate the template outputs
+- validate the inputs
 - ssh script
 - output the template as file and upload to s3 bucket_new
+- write more test cases
 - integrate with travisci/circleci for testing
-
-## How to modify
-
-Code: `lib`
-Configuration: `conf/config.json`
-Templates: `templates/json`
 
 ## How to use the deployment script
 with Default settings:
@@ -50,3 +47,13 @@ Custom settings with config file:
 
 Custom settings command line options
 -  example run: ruby assessment.rb -vpcname "yourVPCname"
+
+## Testing
+
+- bundle exec rspec spec
+
+## How to modify
+
+Code: `lib`
+Configuration: `conf/config.json`
+Templates: `templates/json`
