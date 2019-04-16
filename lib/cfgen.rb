@@ -68,7 +68,7 @@ module Cfgen
       subnet_old = deep_copy(subnet['Resources']['mySubnet'])
       az_count = 0;
 
-      for x in 0..3
+      for x in 0..2
         #assign the values accordingly
         subnet_name = "Subnet#{x+1}"
         subnet_new['Resources'][subnet_name] = deep_copy(subnet_old)
@@ -81,7 +81,7 @@ module Cfgen
         #count according to number of az's in region
         az_count = az_count < (az_list.length-1) ? (az_count = az_count + 1) : (az_count = 0)
       end
-      return subnet_new
+      subnet_new
     end
 
     #this method prepares the s3 from template
