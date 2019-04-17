@@ -1,4 +1,5 @@
 # Assessment Project
+[![Build Status](https://travis-ci.org/nikojdev/cfgen.svg?branch=master)](https://travis-ci.org/nikojdev/cfgen)
 
 This is project was created for assessment purpose only.
 
@@ -31,12 +32,12 @@ Assumptions:
 
 Further improvements:
 - ~~should utilize "Fn::Cidr"  together with "Fn::Select" to get the array of available subnets cidr blocks~~
-- utilize the aws cli to validate the template outputs~~
+- utilize the aws cli to validate the template outputs
 - validate the inputs
 - ssh script
 - output the template as file and upload to s3 bucket_new
 - write more test cases
-- integrate with travisci/circleci for testing
+- ~~integrate with travisci/circleci for testing~~
 
 ## How to use the deployment script
 with Default settings:
