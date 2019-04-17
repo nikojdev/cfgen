@@ -34,7 +34,7 @@ module Cfgen
     # This method orchestrates each single template creation and stores as output
     def prepare_all
       @vpc_output = prepare_vpc(@vpc, @config["vpc_name"], @config["vpc_ip"])
-      @subnet_output = prepare_subnet(@subnet, @config["vpc_name"], @config["subnet_ip"], @config["az_list"])
+      @subnet_output = prepare_subnet(@subnet, @config["vpc_name"], @config["vpc_ip"], @config["subnet_cidr"], @config["az_list"])
       @s3bucket_output = prepare_s3(@bucket)
       @ec2_output = prepare_ec2(@ec2, "Subnet1", @config["vpc_name"], "LatestAmiId", @config["ssh_ip"], @config["instance_type"])
     end
@@ -63,20 +63,25 @@ module Cfgen
     end
 
     #this method prepares the subnets from template
-    def prepare_subnet(subnet, vpc_name, subnet_ip, az_list)
-      subnet_cidrlist = ["10.0.16.0/20","10.0.32.0/20", "10.0.48.0/20" ] #TODO WRONG! this should be replaced by "Fn::Cidr"
+    def prepare_subnet(subnet, vpc_name, subnet_ip, cidr, az_list)
+      #calculate cidr bits,
+      #TODO calculate number of subnets available
+      cidr_bits = 32-cidr.to_i
+
+      #clone
       subnet_new = deep_copy(subnet)
       subnet_old = deep_copy(subnet['Resources']['mySubnet'])
       az_count = 0;
 
       for x in 0..2
-
         #assign the values accordingly
         subnet_name = "Subnet#{x+1}"
         subnet_new['Resources'][subnet_name] = deep_copy(subnet_old)
         subnet_new['Resources'].delete("mySubnet")
         subnet_new['Resources'][subnet_name]['Properties']['VpcId']['Ref'] = vpc_name
-        subnet_new['Resources'][subnet_name]['Properties']['CidrBlock'] = subnet_cidrlist[x] #TODO "Fn::Cidr"
+        subnet_new['Resources'][subnet_name]['Properties']['CidrBlock']['Fn::Select'][0] = x
+        subnet_new['Resources'][subnet_name]['Properties']['CidrBlock']['Fn::Select'][1]["Fn::Cidr"][0] = subnet_ip
+        subnet_new['Resources'][subnet_name]['Properties']['CidrBlock']['Fn::Select'][1]["Fn::Cidr"][2] = cidr_bits
         subnet_new['Resources'][subnet_name]['Properties']['AvailabilityZone'] = az_list[az_count]
         subnet_new['Resources'][subnet_name]['Properties']['Tags'][0]["Value"] = subnet_name
 
